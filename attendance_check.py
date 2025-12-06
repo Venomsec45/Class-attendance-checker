@@ -137,6 +137,12 @@ def download_attendance():
 # User had to choose their input
 def main():
     text_design()
+    choices = {"1": enroll_students,
+               "2": record_attendance,
+               "3": view_attendance,
+               "4": search_student_status,
+               "5": download_attendance,
+               "6": exit}
     try:
         while True:
             print("\nAttendance Checker")
@@ -147,29 +153,11 @@ def main():
             print("5. Download Attendance File")
             print("6. Exit Program")
         
-            choice = input("Choose an option 1-6: ")
-
-            if choice == "1":
-                enroll_students()
-
-            elif choice == "2":
-                record_attendance()
-
-            elif choice == "3":
-                view_attendance()
-
-            elif choice == "4":
-                search_student_status()
-
-            elif choice == "5":
-                download_attendance()
+            choice = input("\nChoose an option (1-6): ")
+            if choice in choices:
+                choices[choice]()
             
-            elif choice == "6":
-                print("Exiting attendance checker")
-                break
-
-            else:
-                print("Choose among the choices and try again!")
+            print("Choose one of the following options and try again!")
     
     except KeyboardInterrupt:
         print("\nAttendance checking cancelled")
@@ -177,3 +165,25 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+            # if choice == "1":
+            #     enroll_students()
+
+            # elif choice == "2":
+            #     record_attendance()
+
+            # elif choice == "3":
+            #     view_attendance()
+
+            # elif choice == "4":
+            #    search_student_status()
+
+            # elif choice == "5":
+            #     download_attendance()
+            
+            # elif choice == "6":
+            #     print("Exiting attendance checker")
+            #     break
+
+            # else:
+            #     print("Choose among the choices and try again!")

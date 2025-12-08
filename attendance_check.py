@@ -1,5 +1,12 @@
+import os
+
 def text_design():
-    print("-" * 48 + "\n" + "Student attendance checker".center(48, "-") + "\n" + "-" * 48)
+    print("-" * 60)
+    print("Student attendance checker".center(60, "="))
+    print("-" * 60)
+
+def clear():
+    os.system('clear' if os.name == 'posix' else 'cls')
 
 # Lists of students
 students = []
@@ -11,138 +18,177 @@ def enroll_students():
     global students
     students = []
 
-    print("\n Enroll Students ")
-    print("Enter the student's name.")
-    print("Type 'done' when finished. \n")
-
     while True:
+        print("\n" + "Enroll Students".center(60, "-") + "\n")
         name = input("Enter student name or type 'done' to exit: ").strip()
 
         if name.lower() == "done":
             break
-        
+
         if name == "":
             print("Name cannot be empty.")
+
         elif name in students:
-            print("Student already enrolled.")
+            print(f"{name} is already enrolled.")
+
         else:
             students.append(name)
-            print(f"{name} added.")
+            print(f"{name} added")
 
-    print("\nEnrollment complete.")
-    print("Enrolled students:", students)
+    print("\nEnrollment complete" + "\n" + f"Number of enrolled students: {len(students)}")
+    print("Enrolled students:")
+    for index, student in enumerate(students, start=1):
+        print(f"{index} - {student}")
 
 # Record attendance
 def record_attendance():
+    clear()
     global present_students, absent_students
 
     if not students:
         print("\nNo students enrolled yet.")
         return
-    
+
     present_students = []
     absent_students = []
 
-    print("\nRecord Attendance ")
-    print("Enter the names of the Present students.")
-    print("Type 'done' when finished.\n")
+    print("\n" + "Record Attendance".center(60, "-") + "\n")
+    print("List of students")
+    for i, student in enumerate(students, start=1):
+        print("+" + "-" * 40 + "+")
 
     while True:
-        name = input("Present students.").strip()
+        name = input("Enter a student or type 'done' when finished: ").strip()
 
-        if name.lower() == 'done':
+        if name.lower() == "done":
             break
-         
+
         if name not in students:
-            print("Students is not in the enrolled list.")
-        elif name in present_students:
-            print("This student is already marked present.")
-        else:
-            present_students.append(name)
-            print(f"{name} is marked present.")
-
-    absent_students = [s for s in students if s not in present_students]
-    print("\n Attendance has been recorded.")
-
-def view_attendance():
-    while True:
-        view_input = input("""View attendance
-
-Present - Present students
-Absent - Absent students
-All - All students
-            
-Choice: """).strip()
+            print("Student is not in the enrolled list.")
+            continue
         
-        if view_input == "Present":
-            print("List of present students")
+        if name in present_students:
+            print(f"{name} is already marked Present")
+            continue
+
+        if name in absent_students:
+            print(f"{name} is already marked Absent")
+            continue
+
+        status = input("Enter 'present' or 'absent': ").strip().lower()
+
+        if status == "present":
+            present_students.append(name)
+            print(f"{name} is marked as present")
+
+        elif status == "absent":
+            absent_students.append(name)
+            print(f"{name} is marked as absent")
+
+        else:
+            print("Enter whether the student is 'present' or 'absent' and try again!")
+
+    for student in students:
+        if student not in present_students and student not in absent_students:
+            absent_students.append(student)
+
+    print("\nAttendance has been recorded, you may view the attendance on the 'view attendance' option")
+
+# View attendance
+def view_attendance():
+    clear()
+    while True:
+        print("View attendance".center(60, "-"))
+        view_input = input("""
+
+present - Present students
+absent  - Absent students
+all     - All students
+done    - When finished
+
+Choice: """).strip().lower()
+
+        if view_input == "present":
+            print("\nList of Present Students")
             for index, present in enumerate(present_students, start=1):
                 print(f"{index} - {present}")
-            break
 
-        elif view_input == "Absent":
-            print("List of absent students")
+        elif view_input == "absent":
+            print("\nList of Absent Students")
             for index, absent in enumerate(absent_students, start=1):
                 print(f"{index} - {absent}")
+
+        elif view_input == "all":
+            print("\nList of All Students")
+            for index, student in enumerate(students, start=1):
+                print(f"{index} - {student}")
+
+        elif view_input == "done":
             break
 
-        elif view_input == "All":
-            print("List of all students")
-            for index, all in enumerate(students, start=1):
-                print(f"{index} - {all}")
-            break
-        
         else:
-            print("Choose one of the following options and try again!")
+            print("Choose one of the valid options.")
 
+
+# Search student status
 def search_student_status():
+    clear()
     while True:
-        search_input = input("Search student or type 'done' to exit: ")
+        search_input = input("Search student or type 'done' to exit: ").strip()
 
-        if search_input == "done":
+        if search_input.lower() == "done":
             break
 
-        elif search_input not in students:
-            print("Student not in the list")
-        
+        if search_input not in students:
+            print("Student not in the list.")
+
         elif search_input in present_students:
-            print(f"{search_input} marked as present")
-        
+            print(f"{search_input} is marked as Present.")
+
         elif search_input in absent_students:
-            print(f"{search_input} marked as absent")
+            print(f"{search_input} is marked as Absent.")
 
-        else:
-            pass
-
+# Download attendance
 def download_attendance():
     filename = "attendance_report.txt"
+
+    if students == [] and present_students == [] and absent_students == []:
+        print("Student lists cannot be empty!")
+        return
+
     with open(filename, "w") as file:
         file.write("Student Attendance Report\n")
-        file.write("---------------------------\n\n")
+        file.write("-" * 50 + "\n")
 
         file.write("Enrolled Students:\n")
-        for s in students:
-            file.write(f" - {s}\n")
+        for i, s in enumerate(students, start=1):
+            file.write(f"{i} - {s}\n")
 
         file.write("\nPresent Students:\n")
-        for p in present_students:
-            file.write(f" - {p}\n")
+        for i, p in enumerate(present_students, start=1):
+            file.write(f"{i} - {p}\n")
 
         file.write("\nAbsent Students:\n")
-        for a in absent_students:
-            file.write(f" - {a}\n")
+        for i, a in enumerate(absent_students, start=1):
+            file.write(f"{i} - {a}\n")
 
     print(f"\nAttendance saved to '{filename}'")
 
-# User had to choose their input
+
+# Main program
 def main():
+    clear()
     text_design()
-    choices = {"1": enroll_students,
-               "2": record_attendance,
-               "3": view_attendance,
-               "4": search_student_status,
-               "5": download_attendance,
-               "6": exit}
+
+    choices = {
+        "1": enroll_students,
+        "2": record_attendance,
+        "3": view_attendance,
+        "4": search_student_status,
+        "5": download_attendance,
+        "6": exit,
+    }
+
     try:
         while True:
             print("\nAttendance Checker")
@@ -152,38 +198,17 @@ def main():
             print("4. Search Student Status")
             print("5. Download Attendance File")
             print("6. Exit Program")
-        
-            choice = input("\nChoose an option (1-6): ")
+
+            choice = input("\nChoose an option (1-6): ").strip()
+
             if choice in choices:
                 choices[choice]()
-            
-            print("Choose one of the following options and try again!")
-    
+            else:
+                print("Choose one of the following options and try again!")
+
     except KeyboardInterrupt:
-        print("\nAttendance checking cancelled")
+        print("\nAttendance checking cancelled.")
+
 
 if __name__ == "__main__":
     main()
-
-
-            # if choice == "1":
-            #     enroll_students()
-
-            # elif choice == "2":
-            #     record_attendance()
-
-            # elif choice == "3":
-            #     view_attendance()
-
-            # elif choice == "4":
-            #    search_student_status()
-
-            # elif choice == "5":
-            #     download_attendance()
-            
-            # elif choice == "6":
-            #     print("Exiting attendance checker")
-            #     break
-
-            # else:
-            #     print("Choose among the choices and try again!")

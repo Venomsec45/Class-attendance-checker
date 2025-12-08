@@ -47,7 +47,7 @@ def record_attendance():
     clear()
 
     if not students:
-        print("\nNo students enrolled yet\n")
+        print("No students enrolled yet\n")
         return
 
     print("\n" + "RECORD ATTENDANCE".center(60, "-") + "\n")
@@ -103,7 +103,7 @@ def record_attendance():
 def view_attendance():
     clear()
     if not present_students and not absent_students and not students:
-        print("No students in the list!" + "\n")
+        print("No students in the list!\n")
         return
 
     print("VIEW ATTENDANCE".center(60, "-"))
@@ -130,12 +130,16 @@ def view_attendance():
             break
 
         else:
-            print("Choose one of the valid options" + "\n")
+            print("Choose one of the valid options\n")
 
 # Search student status
 def search_student_status():
+    if not students and not present_students and not absent_students:
+        print("No students in the lists!\n")
+        return
+    
     clear()
-    print("SEARCH STUDENT".center(60, "-"))
+    print("SEARCH STUDENT".center(60, "-") + "\n")
     while True:
         search_input = input("Search student or type 'done' to exit: ").strip()
 
@@ -158,12 +162,12 @@ def download_attendance():
     filename = "attendance_report.txt"
 
     if not students and not present_students and not absent_students:
-        print("Student lists cannot be empty!" + "\n")
+        print("Student lists cannot be empty!\n")
         return
 
     with open(filename, "w") as file:
-        file.write("Student Attendance Report".center(60, " "))
-        file.write("-" * 60 + "\n")
+        file.write("Student Attendance Report".center(40, " "))
+        file.write("-" * 40 + "\n")
 
         file.write("Enrolled Students:\n")
         for i, s in enumerate(students, start=1):
@@ -177,8 +181,7 @@ def download_attendance():
         for i, a in enumerate(absent_students, start=1):
             file.write(f"{i} - {a}\n")
 
-    print(f"\nAttendance saved to '{filename}'")
-    line()
+    print(f"\nAttendance saved to '{filename}'" + "\n")
 
 # Main program
 def main():
@@ -208,7 +211,7 @@ def main():
             if choice in choices:
                 choices[choice]()
             else:
-                print("Choose one of the following options and try again!")
+                print("Choose one of the following options and try again!\n")
 
     except KeyboardInterrupt:
         print("\nAttendance checking cancelled.")

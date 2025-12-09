@@ -68,12 +68,13 @@ def record_attendance():
         # The user enters a name
         name = input("Enter a student or type 'done' when finished: ").strip()
 
-        # The program tells the user
+        # The program tells the user that there are no students in the list
         if name.lower() == "done" and not present_students and not absent_students:
             print("Students not listed as present or absent")
             line()
             break
 
+        # Automatically marks the non included students as absent
         if name.lower() == "done":
             for student in students:
                 if student not in present_students and student not in absent_students:
@@ -83,18 +84,22 @@ def record_attendance():
             line()
             break
 
+        # If a student doesn't exist
         if name not in students:
             print("Student is not in the enrolled list." + "\n")
             continue
         
+        # If the student is already in the present student list
         if name in present_students:
             print(f"{name} is already marked Present" + "\n")
             continue
 
+        # If the student is already in the absent student list
         if name in absent_students:
             print(f"{name} is already marked Absent" + "\n")
             continue
 
+        # Prompts the user to enter present or absent
         status = input("Enter 'present' or 'absent': ").strip().lower()
 
         if status == "present":
@@ -105,6 +110,7 @@ def record_attendance():
             absent_students.append(name)
             print(f"{name} is marked as absent" + "\n")
 
+        # If the user enters different input
         else:
             print("Enter whether the student is 'present' or 'absent' and try again!" + "\n")
             
@@ -117,27 +123,33 @@ def view_attendance():
 
     print("VIEW ATTENDANCE".center(60, "-"))
     while True:
+        # The program prompts the user to choose the following categories
         view_input = input("\nCheck all, present or absent students (pr - present / ab - absent / a - all / d - to exit): ").lower().strip()
 
+        # Shows the list of present students
         if view_input == "pr":
             print("\nList of Present Students:")
             for index, present in enumerate(present_students, start=1):
                 print(f"{index} - {present}")
             
+        # Shows the list of absent students
         elif view_input == "ab":
             print("\nList of Absent Students:")
             for index, absent in enumerate(absent_students, start=1):
                 print(f"{index} - {absent}")
 
+        # Shows the list of all students
         elif view_input == "a":
             print("\nList of All Students:")
             for index, student in enumerate(students, start=1):
                 print(f"{index} - {student}")
 
+        # To move to the main menu
         elif view_input == "d":
             line()
             break
 
+        # When the user enters a different input
         else:
             print("Choose one of the valid options\n")
 
@@ -151,18 +163,22 @@ def search_student_status():
     clear()
     print("SEARCH STUDENT".center(60, "-") + "\n")
     while True:
+        # Search a student or ttype done to move to the main menu
         search_input = input("Search student or type 'done' to exit: ").strip()
 
         if search_input.lower() == "done":
             line()
             break
 
+        # If a student doesn't exist
         if search_input not in students:
             print("Student not in the list.")
 
+        # If a student is present
         elif search_input in present_students:
             print(f"{search_input} is marked as Present.")
 
+        # If a student is absent
         elif search_input in absent_students:
             print(f"{search_input} is marked as Absent.")
 
@@ -171,10 +187,12 @@ def download_attendance():
     clear()
     filename = "attendance_report.txt"
 
+    # Tells the user that an empty list cannot be imported to a file
     if not students and not present_students and not absent_students:
         print("Student lists cannot be empty!\n")
         return
 
+    # Imports all the list of present, absent and all students in a file
     with open(filename, "w") as file:
         file.write("Student Attendance Report".center(40, " "))
         file.write("\n" + "-" * 40 + "\n")
@@ -226,5 +244,6 @@ def main():
     except KeyboardInterrupt:
         print("\nAttendance checking cancelled.")
 
+# Ensures that the program is not run as a module from another code
 if __name__ == "__main__":
     main()

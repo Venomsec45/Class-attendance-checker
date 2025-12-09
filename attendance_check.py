@@ -1,5 +1,5 @@
 import os
-from design import ascii_design
+from design import ascii_design # ascii art
 
 # Clearing the terminal
 def clear():
@@ -20,21 +20,26 @@ def enroll_students():
 
     print("\n" + "ENROLL STUDENTS".center(60, "-") + "\n")
     while True:
+        # User should type a student's name or done to exit and proceed to the main menu
         name = input("Enter student name or type 'done' to exit: ").strip()
 
         if name.lower() == "done":
             break
 
+        # name cannot be blank
         if name == "":
             print("Name cannot be empty" + "\n")
 
+        # If student's name is on the student list, the program tells the user that a name has already been added
         elif name in students:
             print(f"{name} is already enrolled" + "\n")
 
+        # Adds the student's name to the student list
         else:
             students.append(name)
             print(f"{name} added" + "\n")
 
+    # It shows the number of enrolled students and the enrolled students
     print("\nEnrollment complete" + "\n" + f"Number of enrolled students: {len(students)}")
     print("Enrolled students:")
     for index, student in enumerate(students, start=1):
@@ -46,10 +51,12 @@ def enroll_students():
 def record_attendance():
     clear()
 
+    # It prompts the user to enroll a student
     if not students:
         print("No students enrolled yet\n")
         return
 
+    # It shows the lists of students before the user records the attendance
     print("\n" + "RECORD ATTENDANCE".center(60, "-") + "\n")
     print("List of students:")
     for i, student in enumerate(students, start=1):
@@ -58,8 +65,10 @@ def record_attendance():
     print("\n")
 
     while True:
+        # The user enters a name
         name = input("Enter a student or type 'done' when finished: ").strip()
 
+        # The program tells the user
         if name.lower() == "done" and not present_students and not absent_students:
             print("Students not listed as present or absent")
             line()
@@ -69,7 +78,7 @@ def record_attendance():
             for student in students:
                 if student not in present_students and student not in absent_students:
                     absent_students.append(student)
-
+                
             print("\nAttendance has been recorded\n" + "you may view the attendance on the 'view attendance' option")
             line()
             break
@@ -98,7 +107,7 @@ def record_attendance():
 
         else:
             print("Enter whether the student is 'present' or 'absent' and try again!" + "\n")
-
+            
 # View attendance
 def view_attendance():
     clear()
@@ -135,6 +144,7 @@ def view_attendance():
 # Search student status
 def search_student_status():
     if not students and not present_students and not absent_students:
+        clear()
         print("No students in the lists!\n")
         return
     
@@ -167,7 +177,7 @@ def download_attendance():
 
     with open(filename, "w") as file:
         file.write("Student Attendance Report".center(40, " "))
-        file.write("-" * 40 + "\n")
+        file.write("\n" + "-" * 40 + "\n")
 
         file.write("Enrolled Students:\n")
         for i, s in enumerate(students, start=1):
